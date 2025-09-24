@@ -1,0 +1,70 @@
+foundation_model:
+  model_name: "vinai/phobert-base"
+  tokenizer_name: "vinai/phobert-base"
+
+dataset:
+  author: "viethq1906"
+  tweet_data_name: "vietnamese-sentiment-dataset-with-emoticon"
+  emoji_data_name: "vietnamese-emoticon-dictionary"
+
+model:
+  lstm:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.3
+    out_dim: 3
+  gru:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.3
+    out_dim: 3
+  bigru:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.3
+    out_dim: 3
+  bilstm:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.3
+    out_dim: 3
+  cnn:
+    num_filters: 128
+    kernel_sizes: [2,3,4]
+    dropout: 0.4
+    out_dim: 3
+  logreg:
+    out_dim: 3
+    dropout: 0.1
+  xgboost:
+    max_depth: 4
+    n_estimators: 200
+    learning_rate: 0.1
+    subsample: 0.9
+    colsample_bytree: 0.9
+  loss:
+    label_smoothing: 0.1
+  
+training:  
+  output_dir: "./outputs"
+  max_length: 160
+  batch_train: 32
+  batch_eval: 64
+  lora_lr: 0.0002
+  head_lr: 0.001
+  weight_decay: 0.01
+  warmup_ratio: 0.10
+  epochs: 50
+  warmup_steps: 0
+  param_groups: ["lora","head"]
+  fp16: true
+  max_grad_norm: 1.0
+  early_stopping:
+    metric: macro_f1
+    patience: 5
+  lora:
+    r: 8
+    alpha: 16
+    dropout: 0.1
+    bias: "none"
+    target_modules: ["query", "value"]
