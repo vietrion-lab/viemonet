@@ -5,3 +5,9 @@ datasets:
     label_field: sentiment
     name: Social Comments Dataset
     description: A dataset of social media comments for sentiment analysis.
+  vietnamese_comments:
+    path: viethq1906/UIT-VSMEC-Sentiment-Relabelled
+    text_field: sentence
+    label_field: sentiment
+    name: Vietnamese Comments Dataset
+    description: A dataset of Vietnamese comments for sentiment analysis.
