@@ -1,0 +1,1 @@
+from viemonet.config.train_config import config, device

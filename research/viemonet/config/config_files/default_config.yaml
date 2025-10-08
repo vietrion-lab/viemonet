@@ -1,0 +1,95 @@
+foundation_models:
+  phobert:
+    model_name: "vinai/phobert-base"
+    tokenizer_name: "vinai/phobert-base"
+    embedding_dim: 768
+    type: "transformer"
+  # Temporarily disabled W2V due to research issues
+  # w2v:
+  #   model_name: "word2vec"
+  #   tokenizer_name: "vinai/phobert-base"  # Use PhoBERT tokenizer for consistency
+  #   type: "embedding"
+  #   # W2V specific parameters
+  #   vector_size: 150    # Smaller dim for small vocab
+  #   window: 5           # Context window
+  #   min_count: 2        # Minimum word frequency
+  #   epochs: 10          # Training epochs
+  #   workers: 4          # Parallel workers
+  #   sg: 0               # 0=CBOW, 1=Skip-gram
+  # vit5:
+  #   model_name: "VietAI/vit5-base"
+  #   tokenizer_name: "VietAI/vit5-base"
+  #   type: "transformer"
+
+# Legacy support for backward compatibility
+emotion_knowledge_base:
+  emoticon_sentiment: "https://huggingface.co/datasets/viethq1906/emotion-symbols-sentiment/resolve/main/emoticon_sentiment.csv"
+  emoji_sentiment: "https://huggingface.co/datasets/viethq1906/emotion-symbols-sentiment/resolve/main/esr.csv" 
+
+training_setting:
+  output_dir: "./experiment/outputs"
+  output_structure: "method/dataset/foundation_model/head_model"
+  max_length: 125
+  lora_lr: 0.00005
+  head_lr: 0.0003
+  batch_train: 32
+  batch_eval: 64
+  epochs: 30
+  weight_decay: 0.03
+  warmup_ratio: 0.15
+  warmup_steps: 0
+  param_groups: ["lora","head"]
+  fp16: true
+  max_grad_norm: 0.5
+  early_stopping:
+    metric: accuracy
+    patience: 3
+  lora:
+    r: 8
+    alpha: 16
+    dropout: 0.1
+    bias: "none"
+    target_modules: ["query", "value"]
+
+model:
+  meta_cls:
+    input_dim: 15
+    hidden_dim: 32
+    output_dim: 3
+    learning_rate: 0.0005  # Reduced for stability
+  lstm:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  gru:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  bigru:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  bilstm:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  cnn:
+    num_filters: 128
+    kernel_sizes: [2,3,4]
+    dropout: 0.5
+    out_dim: 3
+  logreg:
+    out_dim: 3
+    dropout: 0.1
+  xgboost:
+    max_depth: 4
+    n_estimators: 200
+    learning_rate: 0.1
+    subsample: 0.9
+    colsample_bytree: 0.9
+  loss:
+    label_smoothing: 0.1
