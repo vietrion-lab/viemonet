@@ -7,7 +7,7 @@ from viemonet.training.training_builder import TrainingBuilder
 class Trainer:
     def __init__(
             self, 
-            method='no_emotion',
+            method='emotion',
             foundation_models=['phobert'], 
             head_names=['lstm']
         ):

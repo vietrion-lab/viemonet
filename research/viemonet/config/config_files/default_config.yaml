@@ -27,7 +27,7 @@ emotion_knowledge_base:
   emoji_sentiment: "https://huggingface.co/datasets/viethq1906/emotion-symbols-sentiment/resolve/main/esr.csv" 
 
 training_setting:
-  output_dir: "./experiment/outputs"
+  output_dir: "./experiment/outputs_rule_based"
   output_structure: "method/dataset/foundation_model/head_model"
   max_length: 125
   lora_lr: 0.00005

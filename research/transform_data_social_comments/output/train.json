@@ -24,7 +24,7 @@
     "sentiment": -1
   },
   {
-    "sentence": "một lí do trog muôn vàn lí do",
+    "sentence": "một lí do trong muôn vàn lí do",
     "sentiment": 0
   },
   {
@@ -37,14 +37,14 @@
   },
   {
     "sentence": "per nghe đi rồi khóc 1 trận cho thoải mái . đừng cố gồng mình lên nữa",
-    "sentiment": -1
+    "sentiment": 1
   },
   {
     "sentence": "công nhận sáng tạo thật đấy",
     "sentiment": 1
   },
   {
-    "sentence": "đòn tấn công cực gắt và cục sút của anh 😂😂😂",
+    "sentence": "đòn tấn công cực gắt và cục súc của anh 😂😂😂",
     "sentiment": 1
   },
   {
@@ -76,7 +76,7 @@
     "sentiment": -1
   },
   {
-    "sentence": "sau em này mà làm cô giáo ngồi kể chuyện hs lại há mồm ra nghe 😁",
+    "sentence": "sau em này mà làm cô giáo ngồi kể chuyện hồi xưa lại há mồm ra nghe 😁",
     "sentiment": 1
   },
   {
@@ -96,7 +96,7 @@
     "sentiment": 1
   },
   {
-    "sentence": "mày định lướt qua rồi nhưng khi đọc bình luận của các bạn và xem kĩ lại thì mày đã rớt nước mắt 😭😭😭.... người cha thật vĩ đại",
+    "sentence": "mình định lướt qua rồi nhưng khi đọc bình luận của các bạn và xem kĩ lại thì mày đã rớt nước mắt 😭😭😭.... người cha thật vĩ đại",
     "sentiment": 1
   },
   {
@@ -104,7 +104,7 @@
     "sentiment": -1
   },
   {
-    "sentence": "cá nhân mình nghĩ nó dừng hay đỗ đúng sai thì đã có ca pạt còn nó đỗ trước cửa nhà mình mà oto hay xe không ra vào được thì lúc đó mới ý kiến . công nhận bọn oto đỗ trước nhà nhìn chỉ muốn đốt",
+    "sentence": "cá nhân mình nghĩ nó dừng hay đỗ đúng sai thì đã có ca phạt còn nó đỗ trước cửa nhà mình mà oto hay xe không ra vào được thì lúc đó mới ý kiến . công nhận bọn oto đỗ trước nhà nhìn chỉ muốn đốt",
     "sentiment": -1
   },
   {
@@ -157,7 +157,7 @@
   },
   {
     "sentence": "khi nào phường có chế độ phát chồng khi mang thân đến đăng kí kết hôn tự nguyện 😊",
-    "sentiment": 0
+    "sentiment": 1
   },
   {
     "sentence": "đéo được tích sự gì 😂",
@@ -349,7 +349,7 @@
   },
   {
     "sentence": ":)) đang ăn mỳ , không có trứng nhạt lắm , có rụnng thì xin vài quả !",
-    "sentiment": 0
+    "sentiment": 1
   },
   {
     "sentence": "cảm ơn nói chuyện nhật ! 1 nền khoa học , giáo dục , trí tuệ văn minh !! 😘",
@@ -377,7 +377,7 @@
   },
   {
     "sentence": "kinh nghiệm được truyền lại là khi nào nấu xong bỏ tí \" tro \" vào lần sau không phải nấu 😊",
-    "sentiment": 1
+    "sentiment": -1
   },
   {
     "sentence": "có những con người luôn phải chịu đắng cay , cta không được chọn gia đình , bạn bè và càng không có quyền lựa chọn cuộc sống này . hãy vui lên với tất cả những gì ta đang có dù là hai bàn tay trắng",
@@ -393,7 +393,7 @@
   },
   {
     "sentence": "đm thực tế như này còn hay . tiếc là đéo ở gần mình =))",
-    "sentiment": -1
+    "sentiment": 0
   },
   {
     "sentence": "per mấy trụ kia em không tag được",
