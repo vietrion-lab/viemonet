@@ -155,6 +155,10 @@ class TrainingBuilder:
         labels = predictions_output.label_ids
         metrics = predictions_output.metrics
         
+        # Handle case where predictions is a tuple (from models returning multiple outputs)
+        if isinstance(predictions, tuple):
+            predictions = predictions[0]
+        
         # Get predicted classes
         if len(predictions.shape) > 1:
             preds = np.argmax(predictions, axis=-1)
@@ -226,6 +230,9 @@ class TrainingBuilder:
         # Create visualization plots
         self._plot_evaluation_metrics(output_dir, metrics, report_dict)
         
+        # Plot training history (eval loss and accuracy over epochs)
+        self._plot_training_history(output_dir)
+        
         # Print summary
         print("\n" + "="*80)
         print("EVALUATION SUMMARY")
@@ -254,9 +261,11 @@ class TrainingBuilder:
         # Plot 1: Per-class Precision, Recall, F1-Score
         ax1 = axes[0, 0]
         classes = ['Negative', 'Neutral', 'Positive']
-        precision = [report_dict[str(i)]['precision'] for i in range(3)]
-        recall = [report_dict[str(i)]['recall'] for i in range(3)]
-        f1 = [report_dict[str(i)]['f1-score'] for i in range(3)]
+        
+        # Safely extract metrics, using 0.0 as default if class not in report
+        precision = [report_dict.get(class_name, {'precision': 0.0})['precision'] for class_name in classes]
+        recall = [report_dict.get(class_name, {'recall': 0.0})['recall'] for class_name in classes]
+        f1 = [report_dict.get(class_name, {'f1-score': 0.0})['f1-score'] for class_name in classes]
         
         x = np.arange(len(classes))
         width = 0.25
@@ -276,7 +285,7 @@ class TrainingBuilder:
         
         # Plot 2: Support (samples per class)
         ax2 = axes[0, 1]
-        support = [report_dict[str(i)]['support'] for i in range(3)]
+        support = [report_dict.get(class_name, {'support': 0})['support'] for class_name in classes]
         colors = ['#ff9999', '#ffcc99', '#99ff99']
         ax2.bar(classes, support, color=colors)
         ax2.set_xlabel('Class')
@@ -286,7 +295,10 @@ class TrainingBuilder:
         
         # Add value labels on bars
         for i, v in enumerate(support):
-            ax2.text(i, v + max(support)*0.02, str(v), ha='center', va='bottom', fontweight='bold')
+            if max(support) > 0:  # Avoid division by zero
+                ax2.text(i, v + max(support)*0.02, str(v), ha='center', va='bottom', fontweight='bold')
+            else:
+                ax2.text(i, v, str(v), ha='center', va='bottom', fontweight='bold')
         
         # Plot 3: Overall Metrics Comparison
         ax3 = axes[1, 0]
@@ -352,3 +364,105 @@ class TrainingBuilder:
         plt.close()
         
         print(f"✓ Saved evaluation plots to: {plot_path}")
+    
+    def _plot_training_history(self, output_dir):
+        """
+        Plot training history (eval loss and accuracy over epochs).
+        
+        Args:
+            output_dir: Directory to save plots
+        """
+        # Get training logs from trainer state
+        if not hasattr(self.trainer, 'state') or self.trainer.state is None:
+            print("⚠ No training history available")
+            return
+        
+        log_history = self.trainer.state.log_history
+        
+        if not log_history:
+            print("⚠ No training history available")
+            return
+        
+        # Extract eval metrics from log history
+        epochs = []
+        eval_losses = []
+        eval_accuracies = []
+        train_losses = []
+        
+        for log in log_history:
+            if 'eval_loss' in log:
+                epochs.append(log.get('epoch', 0))
+                eval_losses.append(log['eval_loss'])
+                eval_accuracies.append(log.get('eval_accuracy', 0))
+            elif 'loss' in log and 'epoch' in log:
+                # Store training loss for reference (optional)
+                pass
+        
+        if not epochs:
+            print("⚠ No evaluation metrics in training history")
+            return
+        
+        # Create figure with 2 subplots
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        fig.suptitle(f'Training History - {self.method}/{self.foundation_model_name}/{self.head_name}', 
+                     fontsize=14, fontweight='bold')
+        
+        # Plot 1: Eval Loss over Epochs
+        ax1.plot(epochs, eval_losses, marker='o', linewidth=2, markersize=8, 
+                color='#FF5252', label='Eval Loss')
+        ax1.set_xlabel('Epoch', fontsize=12)
+        ax1.set_ylabel('Loss', fontsize=12)
+        ax1.set_title('Validation Loss Over Epochs', fontsize=12, fontweight='bold')
+        ax1.grid(True, alpha=0.3)
+        ax1.legend()
+        
+        # Add value annotations on points
+        for i, (epoch, loss) in enumerate(zip(epochs, eval_losses)):
+            if i % max(1, len(epochs) // 5) == 0 or i == len(epochs) - 1:  # Annotate every 5th point and last
+                ax1.annotate(f'{loss:.3f}', 
+                           xy=(epoch, loss), 
+                           xytext=(5, 5),
+                           textcoords='offset points',
+                           fontsize=9,
+                           bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.5))
+        
+        # Plot 2: Eval Accuracy over Epochs
+        ax2.plot(epochs, eval_accuracies, marker='s', linewidth=2, markersize=8,
+                color='#4CAF50', label='Eval Accuracy')
+        ax2.set_xlabel('Epoch', fontsize=12)
+        ax2.set_ylabel('Accuracy', fontsize=12)
+        ax2.set_title('Validation Accuracy Over Epochs', fontsize=12, fontweight='bold')
+        ax2.set_ylim([0, 1.0])
+        ax2.grid(True, alpha=0.3)
+        ax2.legend()
+        
+        # Add value annotations on points
+        for i, (epoch, acc) in enumerate(zip(epochs, eval_accuracies)):
+            if i % max(1, len(epochs) // 5) == 0 or i == len(epochs) - 1:  # Annotate every 5th point and last
+                ax2.annotate(f'{acc:.3f}', 
+                           xy=(epoch, acc), 
+                           xytext=(5, 5),
+                           textcoords='offset points',
+                           fontsize=9,
+                           bbox=dict(boxstyle='round,pad=0.3', facecolor='lightgreen', alpha=0.5))
+        
+        # Find and mark best epoch
+        if eval_accuracies:
+            best_epoch_idx = np.argmax(eval_accuracies)
+            best_epoch = epochs[best_epoch_idx]
+            best_acc = eval_accuracies[best_epoch_idx]
+            
+            ax2.axvline(x=best_epoch, color='red', linestyle='--', linewidth=1.5, alpha=0.5, 
+                       label=f'Best Epoch: {best_epoch:.1f}')
+            ax2.scatter([best_epoch], [best_acc], color='red', s=200, zorder=5, 
+                       marker='*', edgecolors='darkred', linewidths=2)
+            ax2.legend()
+        
+        plt.tight_layout()
+        
+        # Save figure
+        history_path = os.path.join(output_dir, 'training_history.png')
+        plt.savefig(history_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print(f"✓ Saved training history plot to: {history_path}")

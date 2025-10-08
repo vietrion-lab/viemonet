@@ -17,11 +17,7 @@ class Trainer:
         
     def train(self, raw_data=None):
         assert raw_data is not None, "No raw data provided for training."
-        train_data = raw_data['train']
-        val_data = raw_data['validation']
-        test_data = raw_data['test']
-        
-        print(f"[DATASET] Data splits - Train: {len(train_data)}, Validation: {len(val_data)}, Test: {len(test_data)}")
+        # Use little dataset range for testing errors
 
         for foundation_model in self.foundation_models:
             pipeline = TrainingPreprocessor(method=self.method, foundation_model_name=foundation_model)

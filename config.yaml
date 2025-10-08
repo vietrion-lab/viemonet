@@ -1,4 +1,7 @@
-raw_dataset:
-  source1: vanhai123/vietnamese-social-comments
-  source2: minhtoan/vietnamese-comment-sentiment
-  source3: HelloWorld2307/aivivn_test
+datasets:
+  social_comments:
+    path: viethq1906/UIT-VSMEC-Sentiment-Relabelled
+    text_field: sentence
+    label_field: sentiment
+    name: Social Comments Dataset
+    description: A dataset of social media comments for sentiment analysis.

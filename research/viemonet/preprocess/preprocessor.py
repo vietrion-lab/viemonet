@@ -46,7 +46,7 @@ class TrainingPreprocessor:
             
             texts = raw_data[split][text_field]
             labels = raw_data[split][label_field]
-            
+
             # Shift labels from [-1, 0, 1] to [0, 1, 2]
             shifted_labels = self.shift_labels(labels)
             

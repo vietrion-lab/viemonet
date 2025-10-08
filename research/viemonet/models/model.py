@@ -77,7 +77,7 @@ class ViemonetModel(nn.Module):
                 L_meta = (emo_mask_flat * ce_meta).sum() / num_e
                 
                 # Balanced weights to prevent gradient explosion
-                loss = L_final + 0.4 * L_comment + L_meta
+                loss = L_final + 0.3 * L_comment + 0.7 * L_meta
             else:
                 loss = L_final
 
