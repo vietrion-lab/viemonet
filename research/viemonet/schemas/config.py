@@ -23,6 +23,7 @@ class TrainConfig(BaseModel):
     fp16: bool
     max_grad_norm: float
     early_stopping: EarlyStoppingConfig
+    best_model_metric: str  
     
     # LoRA section
     class LoRAConfig(BaseModel):

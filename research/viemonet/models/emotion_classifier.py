@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 
 from viemonet.models.emotion_sentiment import EmotionSentiment
+from viemonet.config import device
 
 
 class EmotionClassifier(nn.Module):
@@ -10,7 +11,7 @@ class EmotionClassifier(nn.Module):
         super(EmotionClassifier, self).__init__()
         self.emo_sent = EmotionSentiment().get_data()
 
-    def forward(self, emos, device=None):
+    def forward(self, emos):
         """
         Get sentiment scores for given emotions.
         
@@ -24,13 +25,12 @@ class EmotionClassifier(nn.Module):
         batch_size = len(emos)
         
         # Determine device - use provided device or CPU as fallback
-        target_device = device if device is not None else torch.device('cpu')
         
-        scores = torch.zeros(batch_size, 3, dtype=torch.float32, device=target_device)
+        scores = torch.zeros(batch_size, 3, dtype=torch.float32, device=device)
         
         for i, emo_list in enumerate(emos):
             if not emo_list:
-                scores[i] = torch.tensor([0.0, 0.0, 0.0], device=target_device)
+                scores[i] = torch.tensor([0.0, 0.0, 0.0], device=device)
             else:
                 # Accumulate scores for all emotions in the list
                 pos_sum = 0.0
@@ -50,8 +50,8 @@ class EmotionClassifier(nn.Module):
                 
                 # Set scores after processing all emotions
                 if count > 0:
-                    scores[i] = torch.tensor([pos_sum / count, neu_sum / count, neg_sum / count], device=target_device)
+                    scores[i] = torch.tensor([pos_sum / count, neu_sum / count, neg_sum / count], device=device)
                 else:
-                    scores[i] = torch.tensor([0.0, 0.0, 0.0], device=target_device)
+                    scores[i] = torch.tensor([0.0, 0.0, 0.0], device=device)
         
         return {"probs": scores}

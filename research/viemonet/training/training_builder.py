@@ -45,6 +45,16 @@ class TrainingBuilder:
         max_grad_norm = config.training_setting.max_grad_norm
         evaluation_strategy = 'epoch'
         save_strategy = 'epoch'
+        
+        # Get best model metric from config, default to 'accuracy' (will become 'eval_accuracy')
+        best_model_metric = getattr(config.training_setting, 'best_model_metric', 'accuracy')
+        
+        # Ensure metric has 'eval_' prefix for evaluation metrics
+        if not best_model_metric.startswith('eval_'):
+            best_model_metric = f'eval_{best_model_metric}'
+        
+        print(f"[TrainingBuilder] Using metric_for_best_model: {best_model_metric}")
+        print(f"[TrainingBuilder] greater_is_better: True (higher {best_model_metric} is better)")
 
         return TrainingArguments(
             output_dir=f"{output_dir}/{self.method}/UIT-VSMEC/{self.foundation_model_name}/{self.head_name}",
@@ -54,7 +64,7 @@ class TrainingBuilder:
             eval_strategy=evaluation_strategy,
             save_strategy=save_strategy,
             load_best_model_at_end=True,
-            metric_for_best_model='accuracy',
+            metric_for_best_model=best_model_metric,
             greater_is_better=True,
             fp16=fp16,
             weight_decay=weight_decay,
@@ -122,6 +132,10 @@ class TrainingBuilder:
             compute_metrics=self.compute_metrics
         )
         
+        for name, param in self.model.named_parameters():
+            if param.requires_grad:
+                print(f"Layer Name: {name} - Shape: {param.shape}")
+
         # Train the model
         self.trainer.train()
     

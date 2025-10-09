@@ -1,7 +1,7 @@
 foundation_models:
   phobert:
-    model_name: "vinai/phobert-base"
-    tokenizer_name: "vinai/phobert-base"
+    model_name: "vinai/phobert-base-v2"
+    tokenizer_name: "vinai/phobert-base-v2"
     embedding_dim: 768
     type: "transformer"
   # Temporarily disabled W2V due to research issues
@@ -27,10 +27,10 @@ emotion_knowledge_base:
   emoji_sentiment: "https://huggingface.co/datasets/viethq1906/emotion-symbols-sentiment/resolve/main/esr.csv" 
 
 training_setting:
-  output_dir: "./experiment/outputs"
+  output_dir: "./experiment/outputs_meta_classifier_17"
   output_structure: "method/dataset/foundation_model/head_model"
-  max_length: 125
-  lora_lr: 0.00005
+  max_length: 32
+  lora_lr: 0.00002
   head_lr: 0.0003
   batch_train: 32
   batch_eval: 64
@@ -42,21 +42,22 @@ training_setting:
   fp16: true
   max_grad_norm: 0.5
   early_stopping:
-    metric: accuracy
-    patience: 3
+    metric: eval_loss
+    patience: 7
+  best_model_metric: eval_accuracy  # Metric used for saving best model
   lora:
-    r: 8
+    r: 16
     alpha: 16
     dropout: 0.1
-    bias: "none"
-    target_modules: ["query", "value"]
+    bias: "all"
+    target_modules: ["query", "key", "value", "output.dense"]
 
 model:
   meta_cls:
     input_dim: 15
     hidden_dim: 32
     output_dim: 3
-    learning_rate: 0.0005  # Reduced for stability
+    learning_rate: 0.0003
   lstm:
     hidden_size: 128
     num_layers: 1
@@ -80,7 +81,7 @@ model:
   cnn:
     num_filters: 128
     kernel_sizes: [2,3,4]
-    dropout: 0.5
+    dropout: 0.3
     out_dim: 3
   logreg:
     out_dim: 3
@@ -92,4 +93,4 @@ model:
     subsample: 0.9
     colsample_bytree: 0.9
   loss:
-    label_smoothing: 0.1
+    label_smoothing: 0.02

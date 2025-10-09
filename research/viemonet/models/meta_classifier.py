@@ -1,76 +1,68 @@
 import torch
 import torch.nn as nn
 
+from viemonet.config import device
+
 
 class MetaClassifier(nn.Module):
     """
-    Meta classifier that combines comment sentiment, emotion sentiment, and rule features
-    to make final sentiment predictions.
+    Meta classifier using logistic regression to combine comment sentiment, 
+    emotion sentiment, and rule features for final sentiment predictions.
+    
+    This simpler approach is more interpretable and can be more robust with limited data.
     """
     
-    def __init__(self, input_dim=15, hidden_dim=32, output_dim=3):
+    def __init__(self, input_dim=17, output_dim=3):
         """
         Args:
-            input_dim: Input dimension (3 comment + 3 emotion + 9 rule features = 15)
-            hidden_dim: Hidden layer dimension
+            input_dim: Input dimension (default 9 for 3x3 rule features)
             output_dim: Output dimension (3 classes: positive, neutral, negative)
+            device: Device to run the model on (CPU or GPU)
         """
         super(MetaClassifier, self).__init__()
         
-        # Deeper network with residual-like connections
-        self.meta_cls_fc1 = nn.Linear(input_dim, hidden_dim * 2)  # 15 -> 64
-        self.bn1 = nn.BatchNorm1d(hidden_dim * 2)
-        self.relu1 = nn.ReLU()
-        self.dropout1 = nn.Dropout(0.4)
+        # Logistic regression: single linear layer (interpretable weights)
+        self.logistic = nn.Linear(input_dim, output_dim, bias=True)
         
-        self.meta_cls_fc2 = nn.Linear(hidden_dim * 2, hidden_dim)  # 64 -> 32
-        self.bn2 = nn.BatchNorm1d(hidden_dim)
-        self.relu2 = nn.ReLU()
-        self.dropout2 = nn.Dropout(0.3)
-        
-        self.meta_cls_fc3 = nn.Linear(hidden_dim, output_dim)  # 32 -> 3
-        self.criterion = nn.CrossEntropyLoss()
-    
-    def forward(self, comment_probs, emotion_probs, rule_feature, labels=None):
+    def _interactive_features(self, p_comment, p_emotion):
         """
-        Forward pass combining all features.
+        Compute interactive features for the entire batch.
         
         Args:
-            comment_probs: Comment sentiment probabilities (batch_size, 3)
-            emotion_probs: Emotion sentiment probabilities (batch_size, 3)
-            rule_feature: Rule-based feature matrix (batch_size, 3, 3)
-            labels: Ground truth labels (batch_size,) - optional
+            p_comment: Comment probabilities (batch_size, 3)
+            p_emotion: Emotion probabilities (batch_size, 3)
             
         Returns:
-            dict with 'loss', 'logits', and 'probs'
+            Interactive features tensor (batch_size, 5)
         """
-        batch_size = comment_probs.shape[0]
+        comment_l = torch.argmax(p_comment, dim=-1)  # (batch_size,)
+        emotion_l = torch.argmax(p_emotion, dim=-1)  # (batch_size,)
         
-        # Flatten rule_feature from (batch_size, 3, 3) to (batch_size, 9)
-        rule_feature_flat = rule_feature.view(batch_size, -1)
-        
-        # Concatenate all features: (batch_size, 3+3+9=15)
-        combined_features = torch.cat([comment_probs, emotion_probs, rule_feature_flat], dim=-1)
-        
-        # Pass through deeper network
-        x = self.meta_cls_fc1(combined_features)
-        x = self.bn1(x)
-        x = self.relu1(x)
-        x = self.dropout1(x)
-        
-        x = self.meta_cls_fc2(x)
-        x = self.bn2(x)
-        x = self.relu2(x)
-        x = self.dropout2(x)
-        
-        logits = self.meta_cls_fc3(x)
+        # Check if emotion exists: sum of probabilities > 0 means there are emotions
+        has_emotion = (p_emotion.sum(dim=-1) > 0).float()  # (batch_size,)
 
-        # Calculate probabilities
-        probs = torch.softmax(logits, dim=-1)
-        
-        # Calculate loss if labels provided
-        loss = None
-        if labels is not None:
-            loss = self.criterion(logits, labels)
-        
-        return {"loss": loss, "logits": logits, "probs": probs}
+        # Compute features for entire batch using vectorized operations
+        same_polarity = (comment_l == emotion_l).float()  # (batch_size,)
+        sarcasm = ((comment_l == 2) & ((emotion_l == 0) | (emotion_l == 1))).float()
+        irony = ((comment_l == 0) & (emotion_l == 2)).float()
+        friendly = ((comment_l == 1) & (emotion_l == 2)).float()
+
+        # Multiply by has_emotion to zero out features when no emotion exists
+        same_polarity = same_polarity * has_emotion
+        sarcasm = sarcasm * has_emotion
+        irony = irony * has_emotion
+        friendly = friendly * has_emotion
+
+        # Stack features: (batch_size, 5)
+        return torch.stack([same_polarity, sarcasm, irony, friendly, has_emotion], dim=-1)
+
+    def forward(self, p_comment, p_emotion):
+        delta = p_comment - p_emotion
+        fabs_delta = torch.abs(delta)
+        interactive_features = self._interactive_features(p_comment, p_emotion)
+        features = torch.cat([p_comment, p_emotion, delta, fabs_delta, interactive_features], dim=-1)
+
+        logits = self.logistic(features)
+        probs = logits.softmax(dim=-1)
+
+        return {"logits": logits, "probs": probs}
