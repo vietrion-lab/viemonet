@@ -51,6 +51,9 @@ training_setting:
     dropout: 0.1
     bias: "all"
     target_modules: ["query", "key", "value", "output.dense"]
+  multi_task_learning:
+    alpha: 0.3
+    beta: 0.7
 
 model:
   meta_cls:

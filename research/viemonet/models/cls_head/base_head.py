@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from viemonet.config import config
-from viemonet.models.mean_pool import MaskedMeanPool
+from research.viemonet.models.submodels.mean_pool import MaskedMeanPool
 
 
 class BaseHead(nn.Module):

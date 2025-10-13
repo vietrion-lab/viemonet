@@ -6,6 +6,19 @@ class EarlyStoppingConfig(BaseModel):
     metric: str
     patience: int
 
+# Multi-task learning section
+class MultiTaskLearningConfig(BaseModel):
+    alpha: float
+    beta: float
+
+# LoRA section
+class LoRAConfig(BaseModel):
+    r: int
+    alpha: int
+    dropout: float
+    bias: str
+    target_modules: List[str]
+
 
 class TrainConfig(BaseModel):
     output_dir: str
@@ -23,18 +36,9 @@ class TrainConfig(BaseModel):
     fp16: bool
     max_grad_norm: float
     early_stopping: EarlyStoppingConfig
-    best_model_metric: str  
-    
-    # LoRA section
-    class LoRAConfig(BaseModel):
-        r: int
-        alpha: int
-        dropout: float
-        bias: str
-        target_modules: List[str]
-
+    best_model_metric: str      
+    multi_task_learning: MultiTaskLearningConfig
     lora: LoRAConfig
-
 
 class FoundationModelChildConfig(BaseModel):
     model_name: str

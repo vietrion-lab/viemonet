@@ -1,8 +1,8 @@
 from transformers import AutoTokenizer
 
 from viemonet.constant import FOUNDATION_MODEL_LIST
-from viemonet.models.phobert_lora import PhoBERTLoRA
-from viemonet.models.vit5_lora import ViT5LoRA
+from research.viemonet.models.foundation_models.phobert_lora import PhoBERTLoRA
+from research.viemonet.models.foundation_models.vit5_lora import ViT5LoRA
 from viemonet.config import config
 
 

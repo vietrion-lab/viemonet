@@ -7,29 +7,22 @@ from sklearn.metrics import classification_report
 import json
 import os
 
-from viemonet.models.model import ViemonetModel
+from research.viemonet.models.main_models.viemonet_phobert import ViemonetModel
 from viemonet.training.callbacks import TrainAccuracyCallback
 from viemonet.config import config, device
 from viemonet.constant import METHOD
 from viemonet.training.data_collator import EmotionDataCollator
 from viemonet.training.two_group_trainer import TwoGroupTrainer
+from viemonet.models.main_model_manager import MainModelManager
 
 
 class TrainingBuilder:
-    def __init__(self, method, head_name, foundation_model_name):
-        label_smoothing = config.model.loss.label_smoothing
-        self.method = method
+    def __init__(self, model_name, head_name, foundation_model_name, class_weights):
         self.head_name = head_name
         self.foundation_model_name = foundation_model_name
         self.trainer = None  # Store trainer for evaluation
         self.test_dataset = None  # Store test dataset
-        self.model = ViemonetModel(
-            method=method,
-            head_model_name=head_name, 
-            foundation_model_name=foundation_model_name,
-            label_smoothing=label_smoothing
-        )
-
+        self.model = MainModelManager().get_model(model_name, class_weights)
         self.model = self.model.to(device)
         self.training_args = self._build_training_args()
         
@@ -52,9 +45,6 @@ class TrainingBuilder:
         # Ensure metric has 'eval_' prefix for evaluation metrics
         if not best_model_metric.startswith('eval_'):
             best_model_metric = f'eval_{best_model_metric}'
-        
-        print(f"[TrainingBuilder] Using metric_for_best_model: {best_model_metric}")
-        print(f"[TrainingBuilder] greater_is_better: True (higher {best_model_metric} is better)")
 
         return TrainingArguments(
             output_dir=f"{output_dir}/{self.method}/UIT-VSMEC/{self.foundation_model_name}/{self.head_name}",
@@ -132,9 +122,9 @@ class TrainingBuilder:
             compute_metrics=self.compute_metrics
         )
         
-        for name, param in self.model.named_parameters():
-            if param.requires_grad:
-                print(f"Layer Name: {name} - Shape: {param.shape}")
+        # for name, param in self.model.named_parameters():
+        #     if param.requires_grad:
+        #         print(f"Layer Name: {name} - Shape: {param.shape}")
 
         # Train the model
         self.trainer.train()
