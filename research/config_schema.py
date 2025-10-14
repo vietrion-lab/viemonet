@@ -10,6 +10,7 @@ class SocialCommentDetail(BaseModel):
     
 class DatasetConfig(BaseModel):
     social_comments: SocialCommentDetail
+    vietnamese_comments: SocialCommentDetail
 
 class ConfigSchema(BaseModel):
     datasets: DatasetConfig
