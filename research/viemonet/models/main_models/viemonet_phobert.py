@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-from research.viemonet.models.submodels.comment_classifier import CommentClassifier
-from research.viemonet.models.submodels.emotion_classifier import EmotionClassifier
-from research.viemonet.models.submodels.meta_classifier import MetaClassifier
+from viemonet.models.submodels.comment_classifier import CommentClassifier
+from viemonet.models.submodels.emotion_classifier import EmotionClassifier
+from viemonet.models.submodels.meta_classifier import MetaClassifier
 from viemonet.constant import SOCIAL_DATASET_SIZE
 from viemonet.config import device, config
 
@@ -11,6 +11,7 @@ from viemonet.config import device, config
 class ViemonetModel(nn.Module):
     def __init__(
         self,
+        class_weights,
         label_smoothing=0.1,
     ):
         super(ViemonetModel, self).__init__()
@@ -18,11 +19,6 @@ class ViemonetModel(nn.Module):
         self.emotion_classifier = EmotionClassifier()
         self.meta_classifier = MetaClassifier()
         self.softmax = nn.Softmax(dim=-1)
-        
-        # Handle imbalanced classes with class weights
-        total = sum(SOCIAL_DATASET_SIZE)
-        class_counts = torch.tensor(SOCIAL_DATASET_SIZE, dtype=torch.float32)
-        class_weights = total / (3 * class_counts)
         
         self.criterion = nn.CrossEntropyLoss(
             weight=class_weights.to(device),

@@ -48,6 +48,8 @@ class FoundationModelChildConfig(BaseModel):
 
 class FoundationModelConfig(BaseModel):
     phobert: FoundationModelChildConfig
+    visobert: FoundationModelChildConfig
+    vit5: FoundationModelChildConfig
 
 
 class LSTMHeadConfig(BaseModel):

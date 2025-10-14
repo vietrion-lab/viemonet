@@ -26,7 +26,7 @@ class PreprocessPipeline:
         else:
             _, self.tokenizer, _ = FoundationModelManager().get_model(foundation_model_name)
         self.method = method
-        self.remove_emotions = method != METHOD[0]
+        self.remove_emotions = method == METHOD[2]
         self.emoticon_lexicon = EmotionSentiment().get_all_emoticons()
         # Sort emoticons by length (descending) for greedy longest-match
         self.emoticon_lexicon_sorted = sorted(self.emoticon_lexicon, key=len, reverse=True)

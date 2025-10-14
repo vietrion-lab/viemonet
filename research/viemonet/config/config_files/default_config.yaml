@@ -4,6 +4,16 @@ foundation_models:
     tokenizer_name: "vinai/phobert-base-v2"
     embedding_dim: 768
     type: "transformer"
+  visobert:
+    model_name: "uitnlp/visobert"
+    tokenizer_name: "uitnlp/visobert"
+    embedding_dim: 768
+    type: "transformer"
+  vit5:
+    model_name: "VietAI/vit5-base"
+    tokenizer_name: "VietAI/vit5-base"
+    embedding_dim: 768
+    type: "transformer"
   # Temporarily disabled W2V due to research issues
   # w2v:
   #   model_name: "word2vec"
@@ -16,10 +26,6 @@ foundation_models:
   #   epochs: 10          # Training epochs
   #   workers: 4          # Parallel workers
   #   sg: 0               # 0=CBOW, 1=Skip-gram
-  # vit5:
-  #   model_name: "VietAI/vit5-base"
-  #   tokenizer_name: "VietAI/vit5-base"
-  #   type: "transformer"
 
 # Legacy support for backward compatibility
 emotion_knowledge_base:
@@ -27,8 +33,8 @@ emotion_knowledge_base:
   emoji_sentiment: "https://huggingface.co/datasets/viethq1906/emotion-symbols-sentiment/resolve/main/esr.csv" 
 
 training_setting:
-  output_dir: "./experiment/outputs_meta_classifier_17"
-  output_structure: "method/dataset/foundation_model/head_model"
+  output_dir: "./experiment/outputs_final"
+  output_structure: "method/dataset/model_name/head_model"
   max_length: 32
   lora_lr: 0.00002
   head_lr: 0.0003
@@ -43,14 +49,14 @@ training_setting:
   max_grad_norm: 0.5
   early_stopping:
     metric: eval_loss
-    patience: 7
-  best_model_metric: eval_accuracy  # Metric used for saving best model
+    patience: 30
+  best_model_metric: accuracy  # Metric used for saving best model
   lora:
     r: 16
-    alpha: 16
+    alpha: 32
     dropout: 0.1
-    bias: "all"
-    target_modules: ["query", "key", "value", "output.dense"]
+    bias: "none"
+    target_modules: ["query", "key", "value"]
   multi_task_learning:
     alpha: 0.3
     beta: 0.7

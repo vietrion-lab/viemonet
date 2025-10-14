@@ -6,8 +6,8 @@ if __name__ == "__main__":
     config = load_config("../config.yaml")
     dataset = load_dataset(config.datasets.social_comments.path)
     trainer = Trainer(
-        method='emotion',
-        model='viemonet_phobert',
+        method='separate_emotion',
+        model_name='viemonet_phobert',
         dataset_name='uit-vsmec'
     )
     trainer.train(raw_data=dataset)

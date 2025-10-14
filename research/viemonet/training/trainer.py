@@ -1,3 +1,4 @@
+import torch
 from viemonet.config import config, device
 from viemonet.preprocess.preprocessor import TrainingPreprocessor 
 from viemonet.preprocess.emotion_dataset import EmotionDataset
@@ -8,7 +9,7 @@ from viemonet.models.main_model_manager import MainModelManager
 class Trainer:
     def __init__(
             self, 
-            method='emotion',
+            method='separate_emotion',
             model_name='viemonet_phobert',
             dataset_name='uit-vsmec'
         ):
@@ -19,8 +20,12 @@ class Trainer:
 
     def train(self, raw_data=None):
         assert raw_data is not None, "No raw data provided for training."
-        
-        pipeline = TrainingPreprocessor(method=self.method, foundation_model_name=self.foundation_model)
+
+        pipeline = TrainingPreprocessor(
+            method=self.method, 
+            model_name=self.model_name, 
+            foundation_model_name=self.foundation_model
+        )
         comment_emotion_pairs = pipeline(raw_data)
 
         print(f"Training with method={self.method}, foundation_model={self.foundation_model}, head_name=CNN")
@@ -29,10 +34,21 @@ class Trainer:
         val_dataset = EmotionDataset(comment_emotion_pairs['validation'])
         test_dataset = EmotionDataset(comment_emotion_pairs['test'])
         
+        # Handle imbalanced classes with class weights
+        # Calculate class weights based on the training data
+        labels_tensor = train_dataset.labels
+        num_classes = 3  # Negative (0), Neutral (1), Positive (2)
+        class_counts = torch.bincount(labels_tensor, minlength=num_classes).float()
+        total = len(labels_tensor)
+        class_weights = total / (num_classes * class_counts)
+        
         model_builder = TrainingBuilder(
-            model=self.model_name,
+            model_name=self.model_name,
             head_name='cnn',
-            foundation_model_name=self.foundation_model
+            foundation_model_name=self.foundation_model,
+            dataset_name=self.dataset_name,
+            method=self.method,
+            class_weights=class_weights
         )
         
         # Store test dataset for evaluation

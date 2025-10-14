@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report
 import json
 import os
 
-from research.viemonet.models.main_models.viemonet_phobert import ViemonetModel
+from viemonet.models.main_models.viemonet_phobert import ViemonetModel
 from viemonet.training.callbacks import TrainAccuracyCallback
 from viemonet.config import config, device
 from viemonet.constant import METHOD
@@ -17,11 +17,14 @@ from viemonet.models.main_model_manager import MainModelManager
 
 
 class TrainingBuilder:
-    def __init__(self, model_name, head_name, foundation_model_name, class_weights):
+    def __init__(self, model_name, head_name, foundation_model_name, dataset_name, method, class_weights):
         self.head_name = head_name
         self.foundation_model_name = foundation_model_name
+        self.dataset_name = dataset_name
+        self.method = method
         self.trainer = None  # Store trainer for evaluation
         self.test_dataset = None  # Store test dataset
+        self.model_name = model_name
         self.model = MainModelManager().get_model(model_name, class_weights)
         self.model = self.model.to(device)
         self.training_args = self._build_training_args()
@@ -38,16 +41,10 @@ class TrainingBuilder:
         max_grad_norm = config.training_setting.max_grad_norm
         evaluation_strategy = 'epoch'
         save_strategy = 'epoch'
-        
-        # Get best model metric from config, default to 'accuracy' (will become 'eval_accuracy')
-        best_model_metric = getattr(config.training_setting, 'best_model_metric', 'accuracy')
-        
-        # Ensure metric has 'eval_' prefix for evaluation metrics
-        if not best_model_metric.startswith('eval_'):
-            best_model_metric = f'eval_{best_model_metric}'
+        best_model_metric = config.training_setting.best_model_metric
 
         return TrainingArguments(
-            output_dir=f"{output_dir}/{self.method}/UIT-VSMEC/{self.foundation_model_name}/{self.head_name}",
+            output_dir=f"{output_dir}/{self.dataset_name}/{self.model_name}/{self.head_name}",
             num_train_epochs=num_train_epochs,
             per_device_train_batch_size=per_device_train_batch_size,
             per_device_eval_batch_size=per_device_eval_batch_size,
@@ -64,6 +61,7 @@ class TrainingBuilder:
             lr_scheduler_type='cosine',
             save_total_limit=3,
             remove_unused_columns=False,  # CRITICAL: Don't remove our custom columns!
+            save_safetensors=False,  # Avoid shared tensor issues with T5 models
         )
     
     def compute_metrics(self, eval_pred):
@@ -101,7 +99,8 @@ class TrainingBuilder:
         assert val_data is not None, "Validation data must be provided."
         
         # Create custom data collator for handling emotions
-        data_collator = EmotionDataCollator()
+        # Only include emotions if method is 'seperate_emotion' (METHOD[0])
+        data_collator = EmotionDataCollator(method=self.method)
         
         # Create accuracy callback for tracking accuracy metric
         accuracy_callback = TrainAccuracyCallback()
@@ -122,9 +121,9 @@ class TrainingBuilder:
             compute_metrics=self.compute_metrics
         )
         
-        # for name, param in self.model.named_parameters():
-        #     if param.requires_grad:
-        #         print(f"Layer Name: {name} - Shape: {param.shape}")
+        for name, param in self.model.named_parameters():
+            if param.requires_grad:
+                print(f"Layer Name: {name} - Shape: {param.shape}")
 
         # Train the model
         self.trainer.train()
@@ -176,13 +175,15 @@ class TrainingBuilder:
             preds, 
             target_names=class_names,
             output_dict=True,
-            zero_division=0
+            zero_division=0,
+            digits=4  # Show 4 decimal places
         )
         report_str = classification_report(
             labels, 
             preds, 
             target_names=class_names,
-            zero_division=0
+            zero_division=0,
+            digits=4  # Show 4 decimal places
         )
         
         # Create output directory
@@ -194,9 +195,7 @@ class TrainingBuilder:
         with open(report_path, 'w') as f:
             f.write("="*80 + "\n")
             f.write(f"Classification Report - Test Set\n")
-            f.write(f"Method: {self.method}\n")
-            f.write(f"Foundation Model: {self.foundation_model_name}\n")
-            f.write(f"Head Model: {self.head_name}\n")
+            f.write(f"Dataset: {self.dataset_name} | Model: {self.model_name} | Head: {self.head_name}\n")
             f.write("="*80 + "\n\n")
             f.write(report_str)
             f.write("\n\n" + "="*80 + "\n")
@@ -216,7 +215,8 @@ class TrainingBuilder:
         
         # Save evaluation results summary
         eval_results = {
-            'method': self.method,
+            'dataset_name': self.dataset_name,
+            'model_name': self.model_name,
             'foundation_model': self.foundation_model_name,
             'head_model': self.head_name,
             'test_loss': float(metrics.get('test_loss', 0)),
@@ -259,7 +259,7 @@ class TrainingBuilder:
         """
         # Create figure with subplots
         fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-        fig.suptitle(f'Evaluation Metrics - {self.method}/{self.foundation_model_name}/{self.head_name}', 
+        fig.suptitle(f'Evaluation Metrics - {self.dataset_name}/{self.model_name}/{self.head_name}', 
                      fontsize=14, fontweight='bold')
         
         # Plot 1: Per-class Precision, Recall, F1-Score
@@ -408,7 +408,7 @@ class TrainingBuilder:
         
         # Create figure with 2 subplots
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
-        fig.suptitle(f'Training History - {self.method}/{self.foundation_model_name}/{self.head_name}', 
+        fig.suptitle(f'Training History - {self.dataset_name}/{self.model_name}/{self.head_name}', 
                      fontsize=14, fontweight='bold')
         
         # Plot 1: Eval Loss over Epochs

@@ -6,8 +6,9 @@ from viemonet.constant import METHOD
 
 
 class TrainingPreprocessor:
-    def __init__(self, method, foundation_model_name=None):
+    def __init__(self, method, model_name, foundation_model_name=None):
         self.method = method
+        self.model_name = model_name
         self.pipeline = PreprocessPipeline(method=method, foundation_model_name=foundation_model_name)
 
     def shift_labels(self, labels: List[int]) -> List[int]:

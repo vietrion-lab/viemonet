@@ -2,7 +2,7 @@ from viemonet.constant.training_constant import MAIN_MODEL_LIST, FOUNDATION_MODE
 from viemonet.models.main_models.viemonet_phobert import ViemonetModel as ViemonetPhobertModel
 from viemonet.models.main_models.viemonet_visobert import ViemonetModel as ViemonetVisobertModel
 from viemonet.models.main_models.vit5 import ViT5Model
-from viemonet.models.main_models.phobert import PhoBertModel
+from viemonet.models.main_models.phobert import PhoBERTModel
 from viemonet.models.main_models.visobert import VisoBERTModel
 from viemonet.config import config
 
@@ -14,19 +14,19 @@ class MainModelManager:
     def get_model(self, model_name: str, class_weights=None):
         assert model_name in MAIN_MODEL_LIST, \
             f"Model {model_name} not recognized. Available models: {MAIN_MODEL_LIST}"
-        assert class_weights is None, "Class weights handling not implemented yet."
+        assert class_weights is not None, "Class weights must be provided."
             
         if model_name == MAIN_MODEL_LIST[0]:
-            return ViemonetPhobertModel(label_smoothing=self.label_smoothing)
+            return ViemonetPhobertModel(class_weights=class_weights, label_smoothing=self.label_smoothing)
         elif model_name == MAIN_MODEL_LIST[1]:
-            return ViemonetVisobertModel(label_smoothing=self.label_smoothing)
+            return ViemonetVisobertModel(class_weights=class_weights, label_smoothing=self.label_smoothing)
         elif model_name == MAIN_MODEL_LIST[2]:
-            return PhoBertModel(label_smoothing=self.label_smoothing)
+            return PhoBERTModel(class_weights=class_weights, label_smoothing=self.label_smoothing)
         elif model_name == MAIN_MODEL_LIST[3]:
-            return VisoBERTModel(label_smoothing=self.label_smoothing)
+            return VisoBERTModel(class_weights=class_weights, label_smoothing=self.label_smoothing)
         elif model_name == MAIN_MODEL_LIST[4]:
-            return ViT5Model(label_smoothing=self.label_smoothing)
-        
+            return ViT5Model(class_weights=class_weights, label_smoothing=self.label_smoothing)
+
     def get_foundation_model_name(self, model_name: str):
         assert model_name in MAIN_MODEL_LIST, \
             f"Model {model_name} not recognized. Available models: {MAIN_MODEL_LIST}"
