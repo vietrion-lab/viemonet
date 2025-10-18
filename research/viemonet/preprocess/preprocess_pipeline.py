@@ -24,9 +24,10 @@ class PreprocessPipeline:
         if tokenizer is not None:
             self.tokenizer = tokenizer
         else:
-            _, self.tokenizer, _ = FoundationModelManager().get_model(foundation_model_name)
+            _, self.tokenizer, _ = FoundationModelManager(method).get_model(foundation_model_name)
         self.method = method
         self.remove_emotions = method == METHOD[2] or method == METHOD[3]
+        self.describe_emotions = method == METHOD[4]
         self.emoticon_lexicon = EmotionSentiment().get_all_emoticons()
         # Sort emoticons by length (descending) for greedy longest-match
         self.emoticon_lexicon_sorted = sorted(self.emoticon_lexicon, key=len, reverse=True)
@@ -35,6 +36,9 @@ class PreprocessPipeline:
         abbrev_path = os.path.join(os.path.dirname(__file__), 'vietnamese_abbrev.csv')
         abbrev_df = pd.read_csv(abbrev_path)
         self.abbrev_dict = dict(zip(abbrev_df['abbrev'], abbrev_df['formal']))
+        
+        if self.describe_emotions:
+            self.emoji_description_dict = EmotionSentiment().get_emoji_description_dict()
         
     def split_comment_emotion(self, text: str) -> Tuple[str, List[str]]:
         """Separate plain comment from emotions (emojis and emoticons)."""
@@ -348,6 +352,8 @@ class PreprocessPipeline:
         # Step 0: Remove emotions if requested
         if self.remove_emotions:
             comment = self._remove_emotions(comment)
+        if self.describe_emotions:
+            comment = self._describe_emotions_in_text(comment)
         
         # Step 1: Remove units from numbers (keep only the number)
         normalized = self._remove_number_units(comment)
@@ -417,7 +423,7 @@ class PreprocessPipeline:
         max_length = config.training_setting.max_length
         
         # Use encode_plus to get both input_ids and handle truncation/padding
-        encoded = self.tokenizer.encode_plus(
+        encoded = self.tokenizer(
             text,
             padding='max_length',
             truncation=True,
@@ -466,6 +472,25 @@ class PreprocessPipeline:
         text = re.sub(r'\b(\d+[\.,]?\d*)\s?%', r'\1', text)
         
         return text
+    
+    def _describe_emotions_in_text(self, text: str) -> str:
+        """Replace all emojis in text with their Vietnamese descriptions."""
+        if not text:
+            return text
+        
+        result = text
+        # Replace emojis with descriptions
+        for match in emoji.emoji_list(text):
+            emoji_char = match['emoji']
+            # Convert emoji to unicode key format for dictionary lookup
+            codepoints = [f"0x{ord(char):x}" for char in emoji_char]
+            unicode_key = ''.join(codepoints) if len(codepoints) == 1 else '_'.join(codepoints)
+            description = self.emoji_description_dict.get(unicode_key, emoji_char)
+            result = result.replace(emoji_char, f" {description} ")
+        
+        # Clean up extra spaces
+        result = re.sub(r'\s+', ' ', result).strip()
+        return result
         
     def __call__(self, raw_data):
         # raw_data = raw_data[:3]
