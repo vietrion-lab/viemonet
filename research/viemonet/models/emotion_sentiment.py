@@ -118,6 +118,16 @@ class EmotionSentiment:
         """Get the unified emotion DataFrame."""
         return self.emotion_df
 
+    def get_emoji_description_dict(self) -> dict:
+        """Load emoji descriptions from JSON file, return dict mapping unicode to description."""
+        import json
+        import os
+        
+        json_path = os.path.join(os.path.dirname(__file__), '../../res/emoji_dict.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        return data.get('dict', {})
 
 # if __name__ == '__main__':
 #     # Set pandas display options to show all rows
