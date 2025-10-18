@@ -2,6 +2,8 @@ import torch
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
+from viemonet.constant import METHOD
+
 
 @dataclass
 class EmotionDataCollator:
@@ -9,6 +11,8 @@ class EmotionDataCollator:
     Custom data collator for emotion-based sentiment analysis.
     Handles batching of mixed data types (tensors and lists of strings).
     """
+    
+    method: str = METHOD[0]  # Default to 'seperate_emotion'
     
     def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -34,9 +38,9 @@ class EmotionDataCollator:
         batch['attn'] = torch.stack([f['attention_mask'] for f in features])
         batch['labels'] = torch.stack([f['labels'] for f in features])
         
-        if len(features) > 0 and 'emotions' in features[0]:
+        # Only include emotions if method is 'seperate_emotion' (METHOD[0])
+        if (self.method == METHOD[0] or self.method == METHOD[3]) \
+            and len(features) > 0 and 'emotions' in features[0]:
             batch['emo'] = [f.get('emotions', None) for f in features]
-        else:
-            batch['emo'] = [None for _ in features]
 
         return batch

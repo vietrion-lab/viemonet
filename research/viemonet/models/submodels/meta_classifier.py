@@ -22,7 +22,7 @@ class MetaClassifier(nn.Module):
         super(MetaClassifier, self).__init__()
         
         # Logistic regression: single linear layer (interpretable weights)
-        self.logistic = nn.Linear(input_dim, output_dim, bias=True)
+        self.meta_logistic = nn.Linear(input_dim, output_dim, bias=True)
         
     def _interactive_features(self, p_comment, p_emotion):
         """
@@ -62,7 +62,7 @@ class MetaClassifier(nn.Module):
         interactive_features = self._interactive_features(p_comment, p_emotion)
         features = torch.cat([p_comment, p_emotion, delta, fabs_delta, interactive_features], dim=-1)
 
-        logits = self.logistic(features)
+        logits = self.meta_logistic(features)
         probs = logits.softmax(dim=-1)
 
         return {"logits": logits, "probs": probs}
