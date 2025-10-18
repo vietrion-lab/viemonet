@@ -1,0 +1,42 @@
+{
+  "dataset_name": "uit-vsfc",
+  "model_name": "vit5",
+  "foundation_model": "vit5",
+  "head_model": "cnn",
+  "test_loss": 0.6426920890808105,
+  "test_accuracy": 0.9229311347007751,
+  "test_samples": 3166,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.9294605809128631,
+      "recall": 0.9538679914833215,
+      "f1-score": 0.9415061295971979,
+      "support": 1409.0
+    },
+    "Neutral": {
+      "precision": 0.5584415584415584,
+      "recall": 0.5149700598802395,
+      "f1-score": 0.5358255451713395,
+      "support": 167.0
+    },
+    "Positive": {
+      "precision": 0.9527458492975734,
+      "recall": 0.9383647798742139,
+      "f1-score": 0.9455006337135615,
+      "support": 1590.0
+    },
+    "accuracy": 0.9229311433986103,
+    "macro avg": {
+      "precision": 0.813549329550665,
+      "recall": 0.8024009437459249,
+      "f1-score": 0.807610769494033,
+      "support": 3166.0
+    },
+    "weighted avg": {
+      "precision": 0.9215842069327561,
+      "recall": 0.9229311433986103,
+      "f1-score": 0.9221133955308365,
+      "support": 3166.0
+    }
+  }
+}

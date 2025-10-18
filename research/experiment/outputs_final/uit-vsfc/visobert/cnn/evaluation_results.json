@@ -1,0 +1,42 @@
+{
+  "dataset_name": "uit-vsfc",
+  "model_name": "visobert",
+  "foundation_model": "visobert",
+  "head_model": "cnn",
+  "test_loss": 0.7208296060562134,
+  "test_accuracy": 0.9235628843307495,
+  "test_samples": 3166,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.9280328992460589,
+      "recall": 0.9609652235628106,
+      "f1-score": 0.9442119944211994,
+      "support": 1409.0
+    },
+    "Neutral": {
+      "precision": 0.5895522388059702,
+      "recall": 0.47305389221556887,
+      "f1-score": 0.5249169435215947,
+      "support": 167.0
+    },
+    "Positive": {
+      "precision": 0.9478703115066751,
+      "recall": 0.9377358490566038,
+      "f1-score": 0.9427758457160923,
+      "support": 1590.0
+    },
+    "accuracy": 0.9235628553379659,
+    "macro avg": {
+      "precision": 0.8218184831862348,
+      "recall": 0.7905849882783277,
+      "f1-score": 0.8039682612196288,
+      "support": 3166.0
+    },
+    "weighted avg": {
+      "precision": 0.9201413058161425,
+      "recall": 0.9235628553379659,
+      "f1-score": 0.9213737916601906,
+      "support": 3166.0
+    }
+  }
+}

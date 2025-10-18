@@ -39,7 +39,8 @@ class EmotionDataCollator:
         batch['labels'] = torch.stack([f['labels'] for f in features])
         
         # Only include emotions if method is 'seperate_emotion' (METHOD[0])
-        if self.method == METHOD[0] and len(features) > 0 and 'emotions' in features[0]:
+        if (self.method == METHOD[0] or self.method == METHOD[3]) \
+            and len(features) > 0 and 'emotions' in features[0]:
             batch['emo'] = [f.get('emotions', None) for f in features]
 
         return batch

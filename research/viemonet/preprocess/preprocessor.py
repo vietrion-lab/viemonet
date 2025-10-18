@@ -35,8 +35,8 @@ class TrainingPreprocessor:
         processed_data = {}
         
         for split in ['train', 'validation', 'test']:
-            texts = raw_data[split]['text']
-            labels = raw_data[split]['label']
+            texts = raw_data[split]['sentence']
+            labels = raw_data[split]['sentiment']
 
             # Filter out None labels and keep texts aligned
             valid_data = [(t, l) for t, l in zip(texts, labels) if l is not None]
@@ -58,7 +58,7 @@ class TrainingPreprocessor:
                 'labels': torch.tensor(labels, dtype=torch.long)
             }
             
-            if self.method == METHOD[0]:
+            if self.method == METHOD[0] or self.method == METHOD[3]:
                 processed_data[split]['emotions'] = pipeline_output['emotions']
         
         return processed_data

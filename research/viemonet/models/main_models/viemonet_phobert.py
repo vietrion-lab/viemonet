@@ -4,7 +4,6 @@ import torch.nn as nn
 from viemonet.models.submodels.comment_classifier import CommentClassifier
 from viemonet.models.submodels.emotion_classifier import EmotionClassifier
 from viemonet.models.submodels.meta_classifier import MetaClassifier
-from viemonet.constant import SOCIAL_DATASET_SIZE
 from viemonet.config import device, config
 
 

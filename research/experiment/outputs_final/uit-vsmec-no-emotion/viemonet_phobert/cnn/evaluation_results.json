@@ -1,0 +1,42 @@
+{
+  "dataset_name": "uit-vsmec-no-emotion",
+  "model_name": "viemonet_phobert",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 0.753055989742279,
+  "test_accuracy": 0.7402597665786743,
+  "test_samples": 693,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.773224043715847,
+      "recall": 0.8132183908045977,
+      "f1-score": 0.7927170868347339,
+      "support": 348.0
+    },
+    "Neutral": {
+      "precision": 0.61875,
+      "recall": 0.532258064516129,
+      "f1-score": 0.5722543352601156,
+      "support": 186.0
+    },
+    "Positive": {
+      "precision": 0.7844311377245509,
+      "recall": 0.8238993710691824,
+      "f1-score": 0.803680981595092,
+      "support": 159.0
+    },
+    "accuracy": 0.7402597402597403,
+    "macro avg": {
+      "precision": 0.725468393813466,
+      "recall": 0.723125275463303,
+      "f1-score": 0.7228841345633139,
+      "support": 693.0
+    },
+    "weighted avg": {
+      "precision": 0.7343348024694348,
+      "recall": 0.7402597402597403,
+      "f1-score": 0.7360607917034466,
+      "support": 693.0
+    }
+  }
+}
