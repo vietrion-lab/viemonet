@@ -1,0 +1,42 @@
+{
+  "dataset_name": "merged_dataset",
+  "model_name": "phobert",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 0.5119009017944336,
+  "test_accuracy": 0.8958279490470886,
+  "test_samples": 3859,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.914785553047404,
+      "recall": 0.9225953329538987,
+      "f1-score": 0.9186738452819495,
+      "support": 1757.0
+    },
+    "Neutral": {
+      "precision": 0.606508875739645,
+      "recall": 0.5807365439093485,
+      "f1-score": 0.5933429811866859,
+      "support": 353.0
+    },
+    "Positive": {
+      "precision": 0.9325328759291024,
+      "recall": 0.9325328759291024,
+      "f1-score": 0.9325328759291024,
+      "support": 1749.0
+    },
+    "accuracy": 0.8958279346981083,
+    "macro avg": {
+      "precision": 0.8179424349053838,
+      "recall": 0.8119549175974498,
+      "f1-score": 0.8148499007992459,
+      "support": 3859.0
+    },
+    "weighted avg": {
+      "precision": 0.89462965790111,
+      "recall": 0.8958279346981083,
+      "f1-score": 0.89519565133954,
+      "support": 3859.0
+    }
+  }
+}

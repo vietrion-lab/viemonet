@@ -11,6 +11,8 @@ class SocialCommentDetail(BaseModel):
 class DatasetConfig(BaseModel):
     social_comments: SocialCommentDetail
     vietnamese_comments: SocialCommentDetail
+    merged_dataset: SocialCommentDetail
+    augmentation_dataset: SocialCommentDetail
 
 class ConfigSchema(BaseModel):
     datasets: DatasetConfig

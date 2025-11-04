@@ -11,3 +11,15 @@ datasets:
     label_field: label
     name: Vietnamese Comments Dataset
     description: A dataset of Vietnamese comments for sentiment analysis.
+  merged_dataset:
+    path: viethq1906/UIT-VSMEC-VSFC-Merge
+    text_field: sentence
+    label_field: sentiment
+    name: Merged Vietnamese Comments Dataset
+    description: A merged dataset of Vietnamese comments for sentiment analysis.
+  augmentation_dataset:
+    path: viethq1906/UIT-VSFC-emotion-augmentation
+    text_field: sentence
+    label_field: sentiment
+    name: Augmented Vietnamese Comments Dataset
+    description: An augmented dataset of Vietnamese comments for sentiment analysis.

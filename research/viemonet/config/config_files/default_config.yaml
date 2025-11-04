@@ -35,12 +35,12 @@ emotion_knowledge_base:
 training_setting:
   output_dir: "./experiment/outputs_final"
   output_structure: "method/dataset/model_name/head_model"
-  max_length: 32
+  max_length: 30
   lora_lr: 0.00002
   head_lr: 0.0003
   batch_train: 32
   batch_eval: 64
-  epochs: 20
+  epochs: 22
   weight_decay: 0.03
   warmup_ratio: 0.15
   warmup_steps: 0
