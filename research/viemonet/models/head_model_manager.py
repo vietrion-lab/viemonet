@@ -4,8 +4,6 @@ from viemonet.models.cls_head.bilstm import BiLSTMClassifier
 from viemonet.models.cls_head.cnn import CNNClassifier
 from viemonet.models.cls_head.gru import GRUClassifier
 from viemonet.models.cls_head.lstm import LSTMClassifier
-from viemonet.models.cls_head.logreg import LogisticRegressionClassifier
-from viemonet.models.cls_head.xgboost import XGBoostClassifier
 
 
 class ClassificationHeadManager:
