@@ -1,0 +1,42 @@
+{
+  "dataset_name": "merged_dataset_with_augmented_vsfc",
+  "model_name": "viemonet_phobert",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 0.6614553928375244,
+  "test_accuracy": 0.8173101544380188,
+  "test_samples": 3859,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.8878688524590164,
+      "recall": 0.8088410991636799,
+      "f1-score": 0.8465145357924352,
+      "support": 1674.0
+    },
+    "Neutral": {
+      "precision": 0.6046267087276551,
+      "recall": 0.6995133819951338,
+      "f1-score": 0.6486181613085167,
+      "support": 822.0
+    },
+    "Positive": {
+      "precision": 0.8857556037599421,
+      "recall": 0.8987527512839325,
+      "f1-score": 0.8922068463219228,
+      "support": 1363.0
+    },
+    "accuracy": 0.8173101839854885,
+    "macro avg": {
+      "precision": 0.7927503883155378,
+      "recall": 0.8023690774809155,
+      "f1-score": 0.7957798478076249,
+      "support": 3859.0
+    },
+    "weighted avg": {
+      "precision": 0.826789453618898,
+      "recall": 0.8173101839854885,
+      "f1-score": 0.8204994540163043,
+      "support": 3859.0
+    }
+  }
+}

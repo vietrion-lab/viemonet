@@ -1,0 +1,42 @@
+{
+  "dataset_name": "uit-vsmec-component-exp",
+  "model_name": "viemonet_no_metacls",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 1.0413366556167603,
+  "test_accuracy": 0.5382395386695862,
+  "test_samples": 693,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.5305410122164049,
+      "recall": 0.8735632183908046,
+      "f1-score": 0.6601520086862106,
+      "support": 348.0
+    },
+    "Neutral": {
+      "precision": 0.575,
+      "recall": 0.3709677419354839,
+      "f1-score": 0.45098039215686275,
+      "support": 186.0
+    },
+    "Positive": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 159.0
+    },
+    "accuracy": 0.5382395382395382,
+    "macro avg": {
+      "precision": 0.36851367073880165,
+      "recall": 0.4148436534420961,
+      "f1-score": 0.37037746694769114,
+      "support": 693.0
+    },
+    "weighted avg": {
+      "precision": 0.4207478676065064,
+      "recall": 0.5382395382395382,
+      "f1-score": 0.452547261131281,
+      "support": 693.0
+    }
+  }
+}

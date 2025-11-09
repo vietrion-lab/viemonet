@@ -1,0 +1,42 @@
+{
+  "dataset_name": "vlsp2016_dataset",
+  "model_name": "phobert",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 0.5843509435653687,
+  "test_accuracy": 0.7580952644348145,
+  "test_samples": 1050,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.7738095238095238,
+      "recall": 0.7428571428571429,
+      "f1-score": 0.7580174927113703,
+      "support": 350.0
+    },
+    "Neutral": {
+      "precision": 0.7109144542772862,
+      "recall": 0.6885714285714286,
+      "f1-score": 0.6995645863570392,
+      "support": 350.0
+    },
+    "Positive": {
+      "precision": 0.7866666666666666,
+      "recall": 0.8428571428571429,
+      "f1-score": 0.8137931034482758,
+      "support": 350.0
+    },
+    "accuracy": 0.758095238095238,
+    "macro avg": {
+      "precision": 0.7571302149178255,
+      "recall": 0.7580952380952382,
+      "f1-score": 0.7571250608388951,
+      "support": 1050.0
+    },
+    "weighted avg": {
+      "precision": 0.7571302149178254,
+      "recall": 0.758095238095238,
+      "f1-score": 0.7571250608388952,
+      "support": 1050.0
+    }
+  }
+}

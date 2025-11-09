@@ -14,18 +14,6 @@ foundation_models:
     tokenizer_name: "VietAI/vit5-base"
     embedding_dim: 768
     type: "transformer"
-  # Temporarily disabled W2V due to research issues
-  # w2v:
-  #   model_name: "word2vec"
-  #   tokenizer_name: "vinai/phobert-base"  # Use PhoBERT tokenizer for consistency
-  #   type: "embedding"
-  #   # W2V specific parameters
-  #   vector_size: 150    # Smaller dim for small vocab
-  #   window: 5           # Context window
-  #   min_count: 2        # Minimum word frequency
-  #   epochs: 10          # Training epochs
-  #   workers: 4          # Parallel workers
-  #   sg: 0               # 0=CBOW, 1=Skip-gram
 
 # Legacy support for backward compatibility
 emotion_knowledge_base:
@@ -40,7 +28,7 @@ training_setting:
   head_lr: 0.0003
   batch_train: 32
   batch_eval: 64
-  epochs: 22
+  epochs: 20
   weight_decay: 0.03
   warmup_ratio: 0.15
   warmup_steps: 0

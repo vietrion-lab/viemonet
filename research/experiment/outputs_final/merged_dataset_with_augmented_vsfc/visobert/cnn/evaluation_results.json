@@ -1,0 +1,42 @@
+{
+  "dataset_name": "merged_dataset_with_augmented_vsfc",
+  "model_name": "visobert",
+  "foundation_model": "visobert",
+  "head_model": "cnn",
+  "test_loss": 0.52744060754776,
+  "test_accuracy": 0.8245659470558167,
+  "test_samples": 3859,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.8821695760598504,
+      "recall": 0.8452807646356033,
+      "f1-score": 0.8633312995729103,
+      "support": 1674.0
+    },
+    "Neutral": {
+      "precision": 0.6338308457711442,
+      "recall": 0.7749391727493917,
+      "f1-score": 0.6973180076628352,
+      "support": 822.0
+    },
+    "Positive": {
+      "precision": 0.904,
+      "recall": 0.8290535583272194,
+      "f1-score": 0.8649062380405664,
+      "support": 1363.0
+    },
+    "accuracy": 0.8245659497279088,
+    "macro avg": {
+      "precision": 0.8066668072769981,
+      "recall": 0.8164244985707381,
+      "f1-score": 0.8085185150921039,
+      "support": 3859.0
+    },
+    "weighted avg": {
+      "precision": 0.8369818153791319,
+      "recall": 0.8245659497279088,
+      "f1-score": 0.82852531750018,
+      "support": 3859.0
+    }
+  }
+}

@@ -5,21 +5,15 @@ datasets:
     label_field: sentiment
     name: Social Comments Dataset
     description: A dataset of social media comments for sentiment analysis.
-  vietnamese_comments:
-    path: ura-hcmut/UIT-VSFC
-    text_field: text
-    label_field: label
-    name: Vietnamese Comments Dataset
-    description: A dataset of Vietnamese comments for sentiment analysis.
-  merged_dataset:
-    path: viethq1906/UIT-VSMEC-VSFC-Merge
-    text_field: sentence
-    label_field: sentiment
-    name: Merged Vietnamese Comments Dataset
-    description: A merged dataset of Vietnamese comments for sentiment analysis.
   augmentation_dataset:
     path: viethq1906/UIT-VSFC-emotion-augmentation
     text_field: sentence
     label_field: sentiment
     name: Augmented Vietnamese Comments Dataset
     description: An augmented dataset of Vietnamese comments for sentiment analysis.
+  vlsp2016_dataset:
+    path: viethq1906/VLSP2016
+    text_field: sentence
+    label_field: sentiment
+    name: VLSP 2016 Dataset
+    description: A dataset of Vietnamese comments from the VLSP 2016 competition.

@@ -3,10 +3,9 @@ FOUNDATION_MODEL_LIST = ['phobert', 'visobert', 'vit5']
 METHOD = ['separate_emotion', 'union_emotion', 'no_emotion', 'separate_no_emotion', 'describe_emotion']
 MAIN_MODEL_LIST = [
     'viemonet_phobert', 
-    'viemonet_visobert', 
+    'viemonet_no_metacls', 
     'phobert', 
     'visobert', 
-    'vit5', 
-    'ved_phobert', 
-    'e2v_phobert'
+    'vit5',
+    'viemonet_polarity_comp'
 ]
