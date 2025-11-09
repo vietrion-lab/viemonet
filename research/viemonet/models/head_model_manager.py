@@ -4,6 +4,11 @@ from viemonet.models.cls_head.bilstm import BiLSTMClassifier
 from viemonet.models.cls_head.cnn import CNNClassifier
 from viemonet.models.cls_head.gru import GRUClassifier
 from viemonet.models.cls_head.lstm import LSTMClassifier
+from viemonet.models.cls_head.lstm_attention import LSTMAttentionClassifier
+from viemonet.models.cls_head.bilstm_attention import BiLSTMAttentionClassifier
+from viemonet.models.cls_head.gru_attention import GRUAttentionClassifier
+from viemonet.models.cls_head.bigru_attention import BiGRUAttentionClassifier
+from viemonet.models.cls_head.transformer_encoder import TransformerEncoderClassifier
 
 
 class ClassificationHeadManager:
@@ -20,9 +25,15 @@ class ClassificationHeadManager:
             return BiGRUClassifier(foundation_model_name=foundation_model_name)
         if head_name == 'bilstm':
             return BiLSTMClassifier(foundation_model_name=foundation_model_name)
+        if head_name == 'lstm_attention':
+            return LSTMAttentionClassifier(foundation_model_name=foundation_model_name)
+        if head_name == 'bilstm_attention':
+            return BiLSTMAttentionClassifier(foundation_model_name=foundation_model_name)
+        if head_name == 'gru_attention':
+            return GRUAttentionClassifier(foundation_model_name=foundation_model_name)
+        if head_name == 'bigru_attention':
+            return BiGRUAttentionClassifier(foundation_model_name=foundation_model_name)
+        if head_name == 'transformer_encoder':
+            return TransformerEncoderClassifier(foundation_model_name=foundation_model_name)
         if head_name == 'cnn':
             return CNNClassifier(foundation_model_name=foundation_model_name)
-        if head_name == 'logreg':
-            return LogisticRegressionClassifier(foundation_model_name=foundation_model_name)
-        if head_name == 'xgboost':
-            return XGBoostClassifier(foundation_model_name=foundation_model_name)

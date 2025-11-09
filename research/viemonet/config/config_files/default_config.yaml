@@ -75,6 +75,35 @@ model:
     num_layers: 1
     dropout: 0.4
     out_dim: 3
+  lstm_attention:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  bilstm_attention:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  gru_attention:
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  bigru_attention:
+    hidden_size: 96   # per direction -> 192 concat
+    num_layers: 1
+    dropout: 0.4
+    out_dim: 3
+  transformer_encoder:
+    num_layers: 2
+    num_heads: 8
+    dim_feedforward: 512
+    dropout: 0.3
+    activation: "gelu"
+    norm_first: false
+    final_norm: true
+    out_dim: 3
   cnn:
     num_filters: 128
     kernel_sizes: [2,3,4]

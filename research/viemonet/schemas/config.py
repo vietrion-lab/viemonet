@@ -77,6 +77,40 @@ class BiLSTMHeadConfig(BaseModel):
     dropout: float
     out_dim: int
 
+class LSTMAttentionHeadConfig(BaseModel):
+    hidden_size: int
+    num_layers: int
+    dropout: float
+    out_dim: int
+
+class BiLSTMAttentionHeadConfig(BaseModel):
+    hidden_size: int  # per direction
+    num_layers: int
+    dropout: float
+    out_dim: int
+
+class GRUAttentionHeadConfig(BaseModel):
+    hidden_size: int
+    num_layers: int
+    dropout: float
+    out_dim: int
+
+class BiGRUAttentionHeadConfig(BaseModel):
+    hidden_size: int  # per direction
+    num_layers: int
+    dropout: float
+    out_dim: int
+
+class TransformerEncoderHeadConfig(BaseModel):
+    num_layers: int
+    num_heads: int
+    dim_feedforward: int
+    dropout: float
+    activation: str
+    norm_first: bool
+    final_norm: bool
+    out_dim: int
+
 class CNNHeadConfig(BaseModel):
     num_filters: int
     kernel_sizes: List[int]
@@ -111,6 +145,11 @@ class ModelHeadsConfig(BaseModel):
     gru: GRUHeadConfig
     bigru: BiGRUHeadConfig
     bilstm: BiLSTMHeadConfig
+    lstm_attention: LSTMAttentionHeadConfig
+    bilstm_attention: BiLSTMAttentionHeadConfig
+    gru_attention: GRUAttentionHeadConfig
+    bigru_attention: BiGRUAttentionHeadConfig
+    transformer_encoder: TransformerEncoderHeadConfig
     cnn: CNNHeadConfig
     logreg: LogisticRegressionHeadConfig
     xgboost: XGBoostHeadConfig
