@@ -14,7 +14,7 @@ class ViemonetModel(nn.Module):
         label_smoothing=0.1,
     ):
         super(ViemonetModel, self).__init__()
-        self.comment_classifier = CommentClassifier('phobert', 'bilstm_attention')
+        self.comment_classifier = CommentClassifier('phobert', 'gru_attention')
         self.emotion_classifier = EmotionClassifier()
         self.meta_classifier = MetaClassifier()
         self.softmax = nn.Softmax(dim=-1)

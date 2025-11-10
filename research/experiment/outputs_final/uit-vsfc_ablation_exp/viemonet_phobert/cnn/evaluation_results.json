@@ -1,0 +1,42 @@
+{
+  "dataset_name": "uit-vsfc_ablation_exp",
+  "model_name": "viemonet_phobert",
+  "foundation_model": "phobert",
+  "head_model": "cnn",
+  "test_loss": 0.614408016204834,
+  "test_accuracy": 0.8768161535263062,
+  "test_samples": 3166,
+  "classification_metrics": {
+    "Negative": {
+      "precision": 0.9373970345963756,
+      "recall": 0.8582202111613876,
+      "f1-score": 0.8960629921259843,
+      "support": 1326.0
+    },
+    "Neutral": {
+      "precision": 0.6958174904942965,
+      "recall": 0.8632075471698113,
+      "f1-score": 0.7705263157894737,
+      "support": 636.0
+    },
+    "Positive": {
+      "precision": 0.9363714531384351,
+      "recall": 0.904485049833887,
+      "f1-score": 0.9201520912547528,
+      "support": 1204.0
+    },
+    "accuracy": 0.8768161718256475,
+    "macro avg": {
+      "precision": 0.8565286594097024,
+      "recall": 0.875304269388362,
+      "f1-score": 0.8622471330567371,
+      "support": 3166.0
+    },
+    "weighted avg": {
+      "precision": 0.8884774546455598,
+      "recall": 0.8768161718256475,
+      "f1-score": 0.8800054902943408,
+      "support": 3166.0
+    }
+  }
+}

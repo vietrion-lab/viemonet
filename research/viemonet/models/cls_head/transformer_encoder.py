@@ -20,13 +20,13 @@ class TransformerEncoderClassifier(BaseHead):
             dropout=tfm_cfg.dropout,
             activation=tfm_cfg.activation,
             batch_first=True,
-            norm_first=tfm_cfg.get('norm_first', False)
+            norm_first=tfm_cfg.norm_first
         )
         
         self.transformer_encoder = nn.TransformerEncoder(
             encoder_layer,
             num_layers=tfm_cfg.num_layers,
-            norm=nn.LayerNorm(encoder_dim) if tfm_cfg.get('final_norm', True) else None
+            norm=nn.LayerNorm(encoder_dim) if tfm_cfg.final_norm else None
         )
         
         self.classifier_dropout = nn.Dropout(tfm_cfg.dropout)

@@ -23,7 +23,7 @@ emotion_knowledge_base:
 training_setting:
   output_dir: "./experiment/outputs_final"
   output_structure: "method/dataset/model_name/head_model"
-  max_length: 30
+  max_length: 130
   lora_lr: 0.00002
   head_lr: 0.0003
   batch_train: 32
@@ -41,7 +41,7 @@ training_setting:
   best_model_metric: accuracy  # Metric used for saving best model
   lora:
     r: 16
-    alpha: 16
+    alpha: 32
     dropout: 0.1
     bias: "none"
     target_modules: ["query", "key", "value"]
