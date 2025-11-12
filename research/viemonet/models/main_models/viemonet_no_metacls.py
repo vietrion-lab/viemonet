@@ -17,16 +17,12 @@ class ViemonetModel_No_MetaCLS(nn.Module):
         super(ViemonetModel_No_MetaCLS, self).__init__()
         self.comment_classifier = CommentClassifier('phobert', 'cnn')
         self.emotion_classifier = EmotionClassifier()
-        self.cls = nn.Linear(6, 3, bias=True)
         self.softmax = nn.Softmax(dim=-1)
         
-        self.criterion = lambda logits, target: (
-            F.nll_loss(
-                F.log_softmax(logits, dim=-1),
-                target,
-                weight=class_weights.to(device),
-                reduction='mean'
-            )
+        self.criterion = nn.CrossEntropyLoss(
+            weight=class_weights.to(device),
+            label_smoothing=label_smoothing,
+            reduction='mean'
         )
         self.alpha = config.training_setting.multi_task_learning.alpha
         self.beta = config.training_setting.multi_task_learning.beta
@@ -35,9 +31,8 @@ class ViemonetModel_No_MetaCLS(nn.Module):
         comment_output = self.comment_classifier(ids, attn)
         # Pass device to emotion_classifier
         emotion_output = self.emotion_classifier(emo)
-        final_probs = torch.concat([comment_output['probs'], emotion_output['probs']], dim=-1)
-        final_logits = self.cls(final_probs)
-        final_probs = self.softmax(final_logits)
+        final_probs = (comment_output['probs'] + emotion_output['probs']) / 2
+        final_logits = final_probs.log()
 
         loss = None
         if labels is not None:
